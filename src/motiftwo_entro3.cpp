@@ -19,7 +19,7 @@ double motiftwo_entro3(NumericVector x) {
 
   NumericVector xBin = binarize_mean(x);
   int N = xBin.size();
-  if (N < 5) warning("Time series is too short for motiftwo_entro3");
+  if (N < 5) warning("Time series is too short for `motiftwo_entro3`");
 
   // Create all possible combinations of three binary values
 

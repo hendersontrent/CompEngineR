@@ -6,6 +6,6 @@
 #' @description Calculate CompEngine's Time-series Features Quickly in R Using a C++ Backend
 #'
 #' @useDynLib CompEngineR
-#' @importFrom stats acf
+#' @importFrom stats sd acf median
 #' @importFrom Rcpp sourceCpp
 NULL

@@ -24,11 +24,11 @@ double embed2_incircle(NumericVector x, double boundary = NA_REAL, NumericVector
   }
 
   double tau = firstzero_ac(x, acfv);
-  NumericVector xt = x[Range(0, x.size() - tau - 1)]; // part of the time series
-  NumericVector xtp = x[Range(tau, x.size() - 1)]; // time-lagged time series
-  int N = x.size() - tau; // Length of each time series subsegment
+  NumericVector xt = x[Range(0, x.size() - tau - 1)]; // Part of the time series
+  NumericVector xtp = x[Range(tau, x.size() - 1)]; // Time-lagged time series
+  int N = x.size() - tau; // Length of each time series sub-segment
 
-  // CIRCLES (points inside a given circular boundary)
+  // Circles (points inside a given circular boundary)
 
   return sum(pow(xtp, 2) + pow(xt, 2) < boundary, na_rm = true) / N;
 }
