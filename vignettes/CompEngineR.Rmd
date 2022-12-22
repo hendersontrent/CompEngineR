@@ -1,0 +1,29 @@
+---
+title: "Introduction to CompEngineR"
+author: "Trent Henderson"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 3
+vignette: >
+  %\VignetteIndexEntry{Introduction to CompEngineR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.height = 7,
+  fig.width = 9
+)
+```
+
+```{r, message = FALSE, warning = FALSE}
+library(CompEngineR)
+```
+
+## Introduction
+
+`CompEngineR` is a XX.

@@ -1,0 +1,30 @@
+Package: CompEngineR
+Type: Package
+Title: Calculate CompEngine's Time-series Features Quickly in R Using a C++ Backend
+Version: 0.1.0
+Date: 2022-12-22
+Authors@R: c(
+  person("Trent", "Henderson", email = "then6675@uni.sydney.edu.au", role = c("cre", "aut"))
+  )
+Maintainer: Trent Henderson <then6675@uni.sydney.edu.au>
+Description: Calculate a set of time-series features contained in CompEngine coded in C++, as originally 
+    presented by Fulcher, Little, and Jones (2013) <doi:> and as coded in R in the package 
+    tsfeatures.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Depends: 
+    R (>= 3.5.0)
+LinkingTo: Rcpp, RcppArmadillo
+Imports: 
+    stats,
+    Rcpp,
+    RcppArmadillo
+Suggests: 
+    knitr,
+    markdown,
+    rmarkdown,
+    pkgdown,
+    testthat (>= 3.0.0)
+RoxygenNote: 7.2.2
+VignetteBuilder: knitr
