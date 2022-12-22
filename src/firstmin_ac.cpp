@@ -17,23 +17,18 @@ using namespace Rcpp;
 //'
 // [[Rcpp::export]]
 int firstmin_ac(NumericVector x, NumericVector acfv) {
-
   int N = x.size();
-
-  // getting acf for all lags
-  // possible delay when sample size is too big
-
   NumericVector autoCorr(N - 1);
-  autoCorr[Range(0, N - 2)] = acfv[1:acfv.size() - 1];
+  autoCorr[Range(0, N - 2)] = acfv[Range(1, N - 1)];
 
-  for (int i = 0; i < autoCorr.size(); ++i) {
+  for (int i = 0; i < autoCorr.size(); i++) {
     if (NumericVector::is_na(autoCorr[i])) {
       warning("No minimum was found.");
       return NA_INTEGER;
     }
     if (i == 1 && autoCorr[1] > autoCorr[0]) {
       return 1;
-    } else if (i > 1 && autoCorr[i - 1] > autoCorr[i] && autoCorr[i] < autoCorr[i + 1]) {
+    } else if (i > 1 && autoCorr[i - 1] > autoCorr[i - 2] && autoCorr[i] < autoCorr[i - 1]) {
       return i;
     }
   }

@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include "sampenc.hpp"
 using namespace Rcpp;
 
 //' Calculate Second Sample Entropy of a time series from software package \code{hctsa}

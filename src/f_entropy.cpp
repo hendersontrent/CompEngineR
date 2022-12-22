@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include "f_entropy.hpp"
 using namespace Rcpp;
 
 //' Calculates the entropy of a set of counts, \code{log(0)=0}
@@ -16,5 +17,6 @@ using namespace Rcpp;
 //'
 // [[Rcpp::export]]
 double f_entropy(NumericVector x) {
-  return -sum(x[x > 0] * log(x[x > 0]));
+  NumericVector pos = x[x > 0];
+  return -sum(pos * log(pos));
 }

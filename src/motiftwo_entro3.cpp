@@ -1,4 +1,6 @@
 #include <Rcpp.h>
+#include "binarize_mean.hpp"
+#include "f_entropy.hpp"
 using namespace Rcpp;
 
 //' Calculate local motifs in a binary symbolization of the time series from software package \code{hctsa}

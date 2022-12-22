@@ -3,6 +3,7 @@ using namespace Rcpp;
 
 //' Calculate fluctuation analysis from software package \code{hctsa}
 //'
+//' @importFrom stats lm residuals
 //' @param x \code{numeric} vector
 //' @return \code{numeric} scalar
 //' @references Hyndman R, Kang Y, Montero-Manso P, Talagala T, Wang E, Yang Y, O'Hara-Wild M (2022). _tsfeatures: Time Series Feature Extraction_. R package version 1.1, <https://CRAN.R-project.org/package=tsfeatures>.

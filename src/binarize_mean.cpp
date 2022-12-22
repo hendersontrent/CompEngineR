@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include "binarize_mean.hpp"
 using namespace Rcpp;
 
 //' Converts an input vector into a binarized version from software package \code{hctsa}

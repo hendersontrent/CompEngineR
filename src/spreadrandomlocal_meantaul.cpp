@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include "firstzero_ac.hpp"
 using namespace Rcpp;
 
 //' Calculate bootstrap-based stationarity measure from software package \code{hctsa}

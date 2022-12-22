@@ -1,10 +1,12 @@
 #include <Rcpp.h>
+#include "firstzero_ac.hpp"
 using namespace Rcpp;
 
 //' Calculate points inside a given circular boundary in a 2-D embedding space from software package \code{hctsa}
 //'
 //' @param x \code{numeric} vector
 //' @param acfv \code{numeric} vector of autocorrelation values
+//' @param boundary \code{numeric} boundary for the circle calculation
 //' @return \code{numeric} scalar
 //' @references Hyndman R, Kang Y, Montero-Manso P, Talagala T, Wang E, Yang Y, O'Hara-Wild M (2022). _tsfeatures: Time Series Feature Extraction_. R package version 1.1, <https://CRAN.R-project.org/package=tsfeatures>.
 //' @references B.D. Fulcher and N.S. Jones. hctsa: A computational framework for automated time-series phenotyping using massive feature extraction. Cell Systems 5, 527 (2017).
@@ -16,7 +18,7 @@ using namespace Rcpp;
 //' embed2_incircle(x)
 //'
 // [[Rcpp::export]]
-double embed2_incircle(NumericVector x, double boundary = NA_REAL, NumericVector acfv) {
+double embed2_incircle(NumericVector x, NumericVector acfv, double boundary = NA_REAL) {
 
   if (NumericVector::is_na(boundary)) {
     warning("`embed2_incircle()` using `boundary = 1`. Set value with `boundary`.");
@@ -30,5 +32,5 @@ double embed2_incircle(NumericVector x, double boundary = NA_REAL, NumericVector
 
   // Circles (points inside a given circular boundary)
 
-  return sum(pow(xtp, 2) + pow(xt, 2) < boundary, na_rm = true) / N;
+  return sum(pow(xtp, 2) + pow(xt, 2) < boundary) / N;
 }
