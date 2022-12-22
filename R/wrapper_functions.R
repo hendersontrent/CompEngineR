@@ -15,7 +15,7 @@ autocorr_features <- function(x){
     stop("Input time series vector x should not have any missing or non-numeric values.")
   }
 
-  acfv <- stats::acf(x, length(x) - 1, plot = FALSE, na.action = na.pass)
+  acfv <- as.vector(stats::acf(x, length(x) - 1, plot = FALSE, na.action = na.pass)$acf)
 
   outs <- data.frame(names = c("embed2_incircle_1", "embed2_incircle_2", "ac_9", "firstmin_ac",
                                "trev_num", "motiftwo_entro3", "walker_propcross"),
