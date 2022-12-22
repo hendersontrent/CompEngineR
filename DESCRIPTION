@@ -15,10 +15,11 @@ Encoding: UTF-8
 LazyData: true
 Depends: 
     R (>= 3.5.0)
-LinkingTo: Rcpp
+LinkingTo: Rcpp, RcppArmadillo
 Imports: 
     stats,
     Rcpp,
+    RcppArmadillo
 Suggests: 
     knitr,
     markdown,

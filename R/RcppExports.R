@@ -71,6 +71,24 @@ f_entropy <- function(x) {
     .Call('_CompEngineR_f_entropy', PACKAGE = 'CompEngineR', x)
 }
 
+#' Calculate coefficients and their standard error during linear regression and return the residuals as per \code{RcppArmadillo}
+NULL
+
+#' Calculate coefficients and their standard error during linear regression and return the residuals as per \code{RcppArmadillo}
+#'
+#' @param x \code{numeric} vector
+#' @return \code{numeric} scalar
+#' @references Dirk Eddelbuettel, Conrad Sanderson (2014). RcppArmadillo: Accelerating R with high-performance C++ linear algebra. Computational Statistics and Data Analysis, Volume 71, March 2014, pages 1054-1063. URL http://dx.doi.org/10.1016/j.csda.2013.02.005
+#' @author Trent Henderson
+#'
+fastLmResid <- function(X, y) {
+    .Call('_CompEngineR_fastLmResid', PACKAGE = 'CompEngineR', X, y)
+}
+
+fastLmResid2 <- function(X, y) {
+    .Call('_CompEngineR_fastLmResid2', PACKAGE = 'CompEngineR', X, y)
+}
+
 #' Calculate time of first minimum in the autocorrelation function from software package \code{hctsa}
 #'
 #' @param x \code{numeric} vector
