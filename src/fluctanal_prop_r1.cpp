@@ -1,5 +1,6 @@
 #include <Rcpp.h>
 #include <algorithm>
+#include "fastLmResid.hpp"
 using namespace Rcpp;
 
 // Define a sequence generation helper function
@@ -92,16 +93,16 @@ double fluctanal_prop_r1(NumericVector x) {
     }
 
     int nn = y_buff.size() * tau;
-    NumericVector tt = seq(1, tau);
+    IntegerVector tt = seq(1, tau);
+    tt.attr("dim") = Dimension(tt.size(), 1);
+    IntegerMatrix tt = as<IntegerMatrix>(tt);
 
     for (int j = 0; j < y_buff.size(); j++) {
-      DataFrame df = DataFrame::create(Named("tt")=tt, Named("lmy")=y_buff[j]);
-      SEXP lm_tt = lm(lmy ~ tt, data = df);
-      y_buff[j] = residuals(lm_tt);
+      y_buff[j] = fastLmResid(tt, y_buff[j]);
     }
 
     NumericMatrix tem = sapply(y_buff, range);
-    NumericVector y_dt = tem(_, 1) - tem(_, 0);
+    NumericVector y_dt = tem[1, ] - tem[2, ];
 
     Fl[i] = pow(mean(pow(y_dt, k)), 1.0 / k);
   }
@@ -114,17 +115,19 @@ double fluctanal_prop_r1(NumericVector x) {
 
   for (int i = minPoints; i < ntt - minPoints; i++) {
     NumericVector r1 = seq(1, i);
-    DataFrame df1 = DataFrame::create(Named("x")=logtt[r1-1], Named("y")=logFF[r1-1]);
-    SEXP p1 = lm(y ~ x, data = df1);
+    r1.attr("dim") = Dimension(r1.size(), 1);
+    NumericMatrix tt = as<NumericMatrix>(tt);
+    NumericVector p1 = fastLmResid2(logtt[r1-1], logFF[r1-1]);
     NumericVector r2 = seq(i, ntt);
-    DataFrame df2 = DataFrame::create(Named("x")=logtt[r2-1], Named("y")=logFF[r2-1]);
-    SEXP p2 = lm(y ~ x, data = df2);
-    sserr[i] = sum(abs(residuals(p1)) + abs(residuals(p2)));
+    r1.attr("dim") = Dimension(r1.size(), 1);
+    NumericMatrix tt = as<NumericMatrix>(tt);
+    NumericVector p2 = fastLmResid2(logtt[r2-1], logFF[r2-1]);
+    sserr[i] = sum(abs(p1) + abs(p2));
   }
 
   int breakPt = which_min(sserr) + 1;
   NumericVector r1 = seq(1, breakPt);
   NumericVector r2 = seq(breakPt, ntt);
-  double prop_r1 = r1.size() / (double) ntt;
+  double prop_r1 = r1.size() / ntt;
   return prop_r1;
 }
