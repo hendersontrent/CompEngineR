@@ -2,7 +2,7 @@ Package: CompEngineR
 Type: Package
 Title: Calculate CompEngine's Time-series Features Quickly in R Using a C++ Backend
 Version: 0.1.0
-Date: 2022-12-22
+Date: 2022-12-23
 Authors@R: c(
   person("Trent", "Henderson", email = "then6675@uni.sydney.edu.au", role = c("cre", "aut"))
   )
@@ -15,11 +15,11 @@ Encoding: UTF-8
 LazyData: true
 Depends: 
     R (>= 3.5.0)
-LinkingTo: Rcpp, RcppArmadillo
+LinkingTo: Rcpp
 Imports: 
     stats,
     Rcpp,
-    RcppArmadillo
+    Rcatch22
 Suggests: 
     knitr,
     markdown,

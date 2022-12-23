@@ -71,24 +71,6 @@ f_entropy <- function(x) {
     .Call('_CompEngineR_f_entropy', PACKAGE = 'CompEngineR', x)
 }
 
-#' Calculate coefficients and their standard error during linear regression and return the residuals as per \code{RcppArmadillo}
-NULL
-
-#' Calculate coefficients and their standard error during linear regression and return the residuals as per \code{RcppArmadillo}
-#'
-#' @param x \code{numeric} vector
-#' @return \code{numeric} scalar
-#' @references Dirk Eddelbuettel, Conrad Sanderson (2014). RcppArmadillo: Accelerating R with high-performance C++ linear algebra. Computational Statistics and Data Analysis, Volume 71, March 2014, pages 1054-1063. URL http://dx.doi.org/10.1016/j.csda.2013.02.005
-#' @author Trent Henderson
-#'
-fastLmResid <- function(X, y) {
-    .Call('_CompEngineR_fastLmResid', PACKAGE = 'CompEngineR', X, y)
-}
-
-fastLmResid2 <- function(X, y) {
-    .Call('_CompEngineR_fastLmResid2', PACKAGE = 'CompEngineR', X, y)
-}
-
 #' Calculate time of first minimum in the autocorrelation function from software package \code{hctsa}
 #'
 #' @param x \code{numeric} vector
@@ -123,24 +105,6 @@ firstmin_ac <- function(x, acfv) {
 #'
 firstzero_ac <- function(x, acfv) {
     .Call('_CompEngineR_firstzero_ac', PACKAGE = 'CompEngineR', x, acfv)
-}
-
-#' Calculate fluctuation analysis from software package \code{hctsa}
-#'
-#' @importFrom stats lm residuals
-#' @param x \code{numeric} vector
-#' @return \code{numeric} scalar
-#' @references Hyndman R, Kang Y, Montero-Manso P, Talagala T, Wang E, Yang Y, O'Hara-Wild M (2022). _tsfeatures: Time Series Feature Extraction_. R package version 1.1, <https://CRAN.R-project.org/package=tsfeatures>.
-#' @references B.D. Fulcher and N.S. Jones. hctsa: A computational framework for automated time-series phenotyping using massive feature extraction. Cell Systems 5, 527 (2017).
-#' @references B.D. Fulcher, M.A. Little, N.S. Jones Highly comparative time-series analysis: the empirical structure of time series and their methods. J. Roy. Soc. Interface 10, 83 (2013).
-#' @author Trent Henderson
-#' @export
-#' @examples
-#' x <- rnorm(100)
-#' fluctanal_prop_r1(x)
-#'
-fluctanal_prop_r1 <- function(x) {
-    .Call('_CompEngineR_fluctanal_prop_r1', PACKAGE = 'CompEngineR', x)
 }
 
 #' Calculate mode of a data vector from software package \code{hctsa}
