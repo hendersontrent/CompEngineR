@@ -16,11 +16,45 @@ using namespace Rcpp;
 //'
 // [[Rcpp::export]]
 double histogram_mode(NumericVector x, int numBins = 10) {
-  if (numBins <= 0) stop("Invalid number of bins");
+  // Find the range of the data
 
-  List histdata = hist(x, plot = false, breaks = numBins);
-  NumericVector binCenters = histdata["mids"];
-  NumericVector counts = histdata["counts"];
-  IntegerVector maxIdx = which_max(counts);
-  return mean(binCenters[maxIdx]);
+  double x_min = x[0];
+  double x_max = x[0];
+  for (int i = 1; i < x.size(); ++i) {
+    if (x[i] < x_min) x_min = x[i];
+    if (x[i] > x_max) x_max = x[i];
+  }
+
+  // Compute the bin width
+
+  double bin_width = (x_max - x_min) / numBins;
+
+  // Initialize the counts and breaks vectors
+
+  NumericVector counts(numBins);
+  NumericVector breaks(numBins + 1);
+  NumericVector midpoints(numBins);
+
+  // Compute the bin midpoints
+
+  for (int i = 0; i < numBins; ++i) {
+    breaks[i] = x_min + i * bin_width;
+    midpoints[i] = (breaks[i] + breaks[i + 1]) / 2;
+  }
+
+  breaks[numBins] = x_max;
+
+  // Find the positions of the maximums
+
+  IntegerVector maximum_positions;
+  for (int i = 0; i < counts.size(); ++i) {
+    if (counts[i] == max(counts)) {
+      maximum_positions.push_back(i);
+    }
+  }
+
+  // Return mean in case of duplicates
+
+  double out = Rcpp::mean(maximum_positions);
+  return out;
 }

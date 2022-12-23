@@ -18,6 +18,7 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 int localsimple_taures(NumericVector x, String forecastMeth) {
 
+  int lp;
   if (forecastMeth == "mean") {
     lp = 1;
   } else{
@@ -25,9 +26,8 @@ int localsimple_taures(NumericVector x, String forecastMeth) {
   }
 
   int N = x.size();
-  IntegerVector evalr = seq(lp + 1, N);
-
   if (lp >= N) stop("Time series too short for forecasting in `localsimple_taures`");
+  IntegerVector evalr = seq(lp + 1, N);
 
   NumericVector res(evalr.size());
   if (forecastMeth == "mean") {
@@ -39,6 +39,7 @@ int localsimple_taures(NumericVector x, String forecastMeth) {
     for (int i = 0; i < evalr.size(); i++) {
       // Fit linear
       NumericVector a = seq(1, lp);
+      a = transpose(NumericMatrix(a));
       NumericVector b = y[Range(evalr[i] - lp, evalr[i] - 1)];
       DataFrame df = DataFrame::create(Named("a")=a, Named("b")=b);
       lm lm_ab = lm(b ~ a, data = df);

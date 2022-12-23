@@ -105,6 +105,7 @@ dist_features <- function(x){
 
 
 #' Wrapper function for just scal_features
+#' @importFrom Rcatch22 SC_FluctAnal_2_rsrangefit_50_1_logi_prop_r1
 #' @param x \code{numeric} vector
 #' @return \code{data.frame} containing feature names and values
 #' @author Trent Henderson
@@ -121,7 +122,7 @@ scal_features <- function(x){
   }
 
   outs <- data.frame(names = c("fluctanal_prop_r1"),
-                     values = c(fluctanal_prop_r1(x)))
+                     values = c(Rcatch22::SC_FluctAnal_2_rsrangefit_50_1_logi_prop_r1(x)))
 
   return(outs)
 }
