@@ -25,7 +25,6 @@ double sum_(NumericVector a) {
   return m;
 }
 
-
 //' Calculate autocorrelation function up to a given lag
 //'
 //' @param y a numerical input vector
