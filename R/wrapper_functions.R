@@ -1,5 +1,5 @@
 #' Wrapper function for just autocorr_features
-#' @importFrom stats acf
+#'
 #' @param x \code{numeric} vector
 #' @return \code{data.frame} containing feature names and values
 #' @author Trent Henderson
@@ -15,14 +15,12 @@ autocorr_features <- function(x){
     stop("Input time series vector x should not have any missing or non-numeric values.")
   }
 
-  acfv <- as.vector(stats::acf(x, length(x) - 1, plot = FALSE, na.action = na.pass)$acf)
-
   outs <- data.frame(names = c("embed2_incircle_1", "embed2_incircle_2", "ac_9", "firstmin_ac",
                                "trev_num", "motiftwo_entro3", "walker_propcross"),
-                     values = c(embed2_incircle(x, 1, acfv = acfv),
-                                embed2_incircle(x, 2, acfv = acfv),
-                                ac_9(x, acfv),
-                                firstmin_ac(x, acfv),
+                     values = c(embed2_incircle(x, 1),
+                                embed2_incircle(x, 2),
+                                ac_9(x),
+                                firstmin_ac(x),
                                 trev_num(x),
                                 motiftwo_entro3(x),
                                 walker_propcross(x)))
@@ -57,6 +55,7 @@ pred_features <- function(x){
 
 
 #' Wrapper function for just station_features
+#'
 #' @param x \code{numeric} vector
 #' @return \code{data.frame} containing feature names and values
 #' @author Trent Henderson
@@ -82,6 +81,7 @@ station_features <- function(x){
 
 
 #' Wrapper function for just dist_features
+#'
 #' @param x \code{numeric} vector
 #' @return \code{data.frame} containing feature names and values
 #' @author Trent Henderson
@@ -105,6 +105,7 @@ dist_features <- function(x){
 
 
 #' Wrapper function for just scal_features
+#'
 #' @importFrom Rcatch22 SC_FluctAnal_2_rsrangefit_50_1_logi_prop_r1
 #' @param x \code{numeric} vector
 #' @return \code{data.frame} containing feature names and values

@@ -1,23 +1,39 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-//' Calculate standard deviation of the first derivative of the time series from software package \code{hctsa}
+//' Calculate std1st_der feature
 //'
-//' @importFrom stats sd
-//' @param x \code{numeric} vector
-//' @return \code{numeric} scalar
-//' @references Hyndman R, Kang Y, Montero-Manso P, Talagala T, Wang E, Yang Y, O'Hara-Wild M (2022). _tsfeatures: Time Series Feature Extraction_. R package version 1.1, <https://CRAN.R-project.org/package=tsfeatures>.
-//' @references B.D. Fulcher and N.S. Jones. hctsa: A computational framework for automated time-series phenotyping using massive feature extraction. Cell Systems 5, 527 (2017).
-//' @references B.D. Fulcher, M.A. Little, N.S. Jones Highly comparative time-series analysis: the empirical structure of time series and their methods. J. Roy. Soc. Interface 10, 83 (2013).
+//' @param y a numerical input vector
 //' @author Trent Henderson
 //' @export
 //' @examples
-//' x <- rnorm(100)
-//' std1st_der(x)
-//'
+//' y <- stats::rnorm(100)
+//' outs <- std1st_der(y)
 // [[Rcpp::export]]
-double std1st_der(NumericVector x) {
-  if (x.size() < 2) stop("Time series is too short to compute differences");
-  NumericVector xd = diff(x);
-  return sd(xd, na_rm = true);
+double std1st_der(NumericVector y) {
+  int n = y.size();
+  if (n < 2) {
+    stop("Time series is too short to compute differences");
+  }
+
+  NumericVector yd(n - 1);
+  for (int i = 1; i < n; i++) {
+    yd[i - 1] = y[i] - y[i - 1];
+  }
+
+  double sum = 0.0;
+
+  for (int i = 0; i < n - 1; i++) {
+    sum += yd[i];
+  }
+
+  double mean = sum / (n - 1);
+  double squared_diff_sum = 0.0;
+
+  for (int i = 0; i < n - 1; i++) {
+    squared_diff_sum += (yd[i] - mean) * (yd[i] - mean);
+  }
+
+  double std_dev = sqrt(squared_diff_sum / (n - 2));
+  return std_dev;
 }

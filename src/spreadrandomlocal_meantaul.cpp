@@ -1,38 +1,142 @@
 #include <Rcpp.h>
-#include "firstzero_ac.hpp"
 using namespace Rcpp;
 
-//' Calculate bootstrap-based stationarity measure from software package \code{hctsa}
+// Calculate the mean of a numeric vector
+double mean_(NumericVector y) {
+  int n = y.size();
+  double sum = 0.0;
+
+  for (int i = 0; i < n; i++) {
+    sum += y[i];
+  }
+
+  return sum / n;
+}
+
+// Calculate the mean of an integer vector
+double mean_int(IntegerVector y) {
+  int n = y.size();
+  double sum = 0.0;
+
+  for (int i = 0; i < n; i++) {
+    sum += y[i];
+  }
+
+  return sum / n;
+}
+
+// Calculate the sum of a numeric vector
+double sum_(NumericVector a) {
+  double m = 0.0;
+  int size = a.size();
+
+  for (int i = 0; i < size; i++){
+    m += a[i];
+  }
+
+  return m;
+}
+
+//' Calculate autocorrelation function up to a given lag
+ //'
+ //' @param y a numerical input vector
+ //' @param lag_max integer denoting the largest lag to compute for. Defaults to 1
+ //' @param demean Boolean whether to demean the time series. Defaults to true
+ //' @author Trent Henderson
+ //' @examples
+ //' y <- stats::rnorm(100)
+ //' outs <- ac(y, 1)
+ // [[Rcpp::export]]
+ NumericVector ac(NumericVector y, bool demean = true) {
+   int n = y.size();
+   NumericVector x = y;
+
+   if (demean) {
+     x = y - mean_(y);
+   }
+
+   NumericVector result(n - 1);
+
+   for (int k = 0; k < n - 1; ++k) {
+     double sum = 0;
+     for (int i = 0; i < n - k; ++i) {
+       sum += x[i] * x[i + k];
+     }
+     result[k] = sum / sum_(x * x);
+   }
+
+   return result;
+ }
+
+ //' Find the first zero in ACF
+ //'
+ //' @param acfv a numerical input vector
+ //' @author Trent Henderson
+ //' @export
+ //' @examples
+ //' y <- stats::rnorm(100)
+ //' outs <- firstzero_ac(y)
+ // [[Rcpp::export]]
+ int firstzero_ac(NumericVector y) {
+   int N = y.size();
+   NumericVector acfv = ac(y);
+   NumericVector acfValues = acfv[Range(1, N - 1)];
+
+   // Find indices where acfValues are less than 0
+   IntegerVector tau;
+
+   for (int i = 0; i < acfValues.size(); ++i) {
+     if (acfValues[i] < 0) {
+       tau.push_back(i + 1); // Adding 1 to convert from 0-based index to 1-based
+     }
+   }
+
+   if (tau.size() == 0) {
+     return 0;
+   } else if (std::all_of(tau.begin(), tau.end(), [](int val) { return val == NA_INTEGER; })) {
+     return 0;
+   } else if (std::none_of(tau.begin(), tau.end(), [](int val) { return val != 0; })) {
+     return N;
+   } else {
+     return tau[0];
+   }
+ }
+
+//' Calculate spreadrandomlocal_meantaul feature
 //'
-//' @param x \code{numeric} vector
-//' @param l \code{integer} denoting the length of local time-series segments to analyse
-//' @return \code{numeric} scalar
-//' @references Hyndman R, Kang Y, Montero-Manso P, Talagala T, Wang E, Yang Y, O'Hara-Wild M (2022). _tsfeatures: Time Series Feature Extraction_. R package version 1.1, <https://CRAN.R-project.org/package=tsfeatures>.
-//' @references B.D. Fulcher and N.S. Jones. hctsa: A computational framework for automated time-series phenotyping using massive feature extraction. Cell Systems 5, 527 (2017).
-//' @references B.D. Fulcher, M.A. Little, N.S. Jones Highly comparative time-series analysis: the empirical structure of time series and their methods. J. Roy. Soc. Interface 10, 83 (2013).
+//' @param y a numerical input vector
+//' @param l integer denoting the length of local time-series segments to analyse as a positive integer. Defaults to 50
 //' @author Trent Henderson
 //' @export
 //' @examples
-//' x <- rnorm(100)
-//' spreadrandomlocal_meantaul(x)
-//'
+//' y <- stats::rnorm(100)
+//' outs <- spreadrandomlocal_meantaul(y)
 // [[Rcpp::export]]
-double spreadrandomlocal_meantaul(NumericVector x, int l = 50) {
-  if (l > 0.9 * x.size()) {
-    warning("The time series is too short. Specify proper segment length in `l`");
-    return NA_REAL;
-  }
+double spreadrandomlocal_meantaul(NumericVector y, int l = 50) {
+   int numSegs = 100;
+   int N = y.size();
 
-  int numSegs = 100;
-  NumericVector qs(numSegs);
+   if (l > 0.9 * N) {
+     Rcpp::warning("This time series is too short. Specify proper segment length in `l`");
+     return NA_REAL;
+   }
 
-  for (int j = 0; j < numSegs; j++) {
-    int ist = sample(x.size() - 1 - l, 1)[0];
-    int ifh = ist + l - 1;
-    IntegerVector rs = seq(ist, ifh);
-    NumericVector xsub = x[rs];
-    int taul = firstzero_ac(xsub);
-    qs[j] = taul;
-  }
-  return mean(qs, na_rm = true);
-}
+   IntegerVector qs(numSegs);
+
+   for (int j = 0; j < numSegs; j++) {
+     int ist = Rcpp::sample(N - 1 - l, 1)[0];
+     int ifh = ist + l - 1;
+     IntegerVector rs(ifh - ist);
+
+     for (int k = 0; j < rs.size(); j++) {
+       rs[k] = ist + k;
+     }
+
+     NumericVector ysub = y[rs];
+     int taul = firstzero_ac(ysub);
+     qs[j] = taul;
+   }
+
+   double mean_qs = mean_int(qs);
+   return mean_qs;
+ }
